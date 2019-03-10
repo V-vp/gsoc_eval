@@ -34,28 +34,36 @@ CET Date-Time: 2018-11-11 19:48:28
 ###############  Creating CSV file ################
 
 import h5py
-import pandas as pd
 import numpy as np
 import scipy.signal
 import matplotlib.pyplot as plt
 import csv
 
 
-datalist = [] 
+datalist = []
+data=['Data','Type','data_type','data_shape','data_size'] 
+datalist.append(data)
 def print_attrs(name):
     f_name = f.get(name) ## full path
-    name_list = name.split('/')
-    try:   
-        group_name = '/'.join(name_list[:-1])  ## retrive group name
-        data_name = name_list[-1] ## dataset name
-        datatype = f_name.dtype ## dataset type
+    if isinstance(f_name, h5py.Dataset):
         datashape = f_name.shape ## dataset shape
         datasize = f_name.size ## dataset size
-        
-        data=[data_name,group_name,datatype,datashape,datasize] 
+        try:   
+            
+            datatype = f_name.dtype ## dataset type
+            data=[name,'Dataset',datatype,datashape,datasize] 
+            datalist.append(data)
+        except:
+            '''
+            TypeError: No NumPy equivalent for TypeBitfieldID exists
+            while reading dtype of dataset so left with 'TypeError'
+            '''
+            data=[name,'Dataset','TypeError',datashape,datasize] 
+            datalist.append(data)
+    else:
+        data=[name,'Group','','',''] 
         datalist.append(data)
-    except:
-        pass
+        
 
 f = h5py.File('h5_files/'+filename[0],'r')
 f.visit(print_attrs)
@@ -64,8 +72,6 @@ csvwriter = csv.writer(csvfile)
 for item in datalist:        ## add row to csv file from datalist  
     csvwriter.writerow(item)
 csvfile.close()
-df = pd.read_csv('output.csv', names=['dataset_name','group','data_type','data_shape','data_size'])
-df.to_csv('output.csv',index=False)
 
 
 
