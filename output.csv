@@ -1,4 +1,4 @@
-dataset,group,data_type,data_shape,data_size
+dataset_name,group,data_type,data_shape,data_size
 numericPosition,AwakeEventData/AIRTR01/Acq,float32,"(1,)",1
 numericPosition,AwakeEventData/AIRTR02/Acq,float32,"(1,)",1
 phaseACurrentValue,AwakeEventData/AWAKEInjPhaseShifter/PhaseReadback,float32,"(1,)",1
